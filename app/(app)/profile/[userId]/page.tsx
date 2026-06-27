@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import CalendarView from '@/components/profile/CalendarView'
 import FollowButton from '@/components/profile/FollowButton'
+import ShareModal from '@/components/profile/ShareModal'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,7 +33,13 @@ export default async function UserProfilePage({ params }: { params: { userId: st
   return (
     <div className="max-w-lg mx-auto">
       <header className="sticky top-0 bg-background/95 backdrop-blur-sm z-40 px-4 py-4 border-b border-[#E8E0D8]/60">
-        <h1 className="font-mincho text-lg text-center">{profile.username}</h1>
+        <div className="flex items-center justify-between">
+          <div className="w-12" />
+          <h1 className="font-mincho text-lg">{profile.username}</h1>
+          <div className="w-12 flex justify-end">
+            <ShareModal userId={params.userId} username={profile.username} />
+          </div>
+        </div>
       </header>
 
       <div className="p-6">

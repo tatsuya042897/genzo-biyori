@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import CalendarView from '@/components/profile/CalendarView'
+import ShareModal from '@/components/profile/ShareModal'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,9 +31,12 @@ export default async function MyProfilePage() {
       <header className="sticky top-0 bg-background/95 backdrop-blur-sm z-40 px-4 py-4 border-b border-[#E8E0D8]/60">
         <div className="flex items-center justify-between">
           <h1 className="font-mincho text-lg">プロフィール</h1>
-          <Link href="/profile/edit" className="text-sm text-muted hover:text-primary transition-colors">
-            編集
-          </Link>
+          <div className="flex items-center gap-4">
+            <ShareModal userId={profile.id} username={profile.username} />
+            <Link href="/profile/edit" className="text-sm text-muted hover:text-primary transition-colors">
+              編集
+            </Link>
+          </div>
         </div>
       </header>
 
