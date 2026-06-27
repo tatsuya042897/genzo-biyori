@@ -9,8 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "#F8F4EE",
+        card: "#FFFFFF",
+        accent: "#D4603A",
+        primary: "#1A1A1A",
+        muted: "#8C8279",
+      },
+      fontFamily: {
+        mincho: ["Shippori Mincho", "serif"],
+        playfair: ["Playfair Display", "serif"],
       },
     },
   },

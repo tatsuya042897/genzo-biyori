@@ -1,0 +1,24 @@
+{
+  "name": "現像日和",
+  "short_name": "現像日和",
+  "description": "フィルム写真愛好家のためのリアルタイム共有SNS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F4EE",
+  "theme_color": "#F8F4EE",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

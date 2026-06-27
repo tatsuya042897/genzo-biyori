@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head><title>Icon Generator</title></head>
+<body>
+<!-- Open this file in a browser and save the canvas as PNG for each size -->
+<canvas id="c192" width="192" height="192"></canvas>
+<canvas id="c512" width="512" height="512"></canvas>
+<script>
+  function drawIcon(canvas) {
+    const ctx = canvas.getContext('2d');
+    const size = canvas.width;
+    // Background
+    ctx.fillStyle = '#F8F4EE';
+    ctx.fillRect(0, 0, size, size);
+    // Circle
+    ctx.beginPath();
+    ctx.arc(size/2, size/2, size*0.4, 0, Math.PI*2);
+    ctx.fillStyle = '#D4603A';
+    ctx.fill();
+    // Camera icon
+    ctx.fillStyle = '#F8F4EE';
+    const s = size * 0.35;
+    const x = size/2 - s/2;
+    const y = size/2 - s/2;
+    ctx.font = `bold ${size*0.3}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('現', size/2, size/2);
+  }
+  drawIcon(document.getElementById('c192'));
+  drawIcon(document.getElementById('c512'));
+</script>
+</body>
+</html>
