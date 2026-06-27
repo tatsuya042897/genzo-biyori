@@ -65,18 +65,18 @@ export default function BottomNav() {
         </Link>
 
         <Link
-          href="/post/new"
-          className="flex items-center justify-center w-12 h-12 bg-accent rounded-full text-white shadow-md hover:bg-[#C05530] transition-colors flex-shrink-0"
-        >
-          <PlusIcon />
-        </Link>
-
-        <Link
           href="/profile"
           className={`flex flex-col items-center gap-0.5 transition-colors flex-1 ${isProfile ? 'text-accent' : 'text-muted'}`}
         >
           <UserIcon active={isProfile} />
           <span className="text-[10px]">プロフィール</span>
+        </Link>
+
+        <Link
+          href="/post/new"
+          className="flex items-center justify-center w-12 h-12 bg-accent rounded-full text-white shadow-md hover:bg-[#C05530] transition-colors flex-shrink-0"
+        >
+          <PlusIcon />
         </Link>
       </div>
     </nav>
