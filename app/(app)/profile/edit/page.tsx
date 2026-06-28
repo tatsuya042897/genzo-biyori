@@ -9,6 +9,8 @@ export default function EditProfilePage() {
   const router = useRouter()
   const [username, setUsername] = useState('')
   const [bio, setBio] = useState('')
+  const [instagramUsername, setInstagramUsername] = useState('')
+  const [twitterUsername, setTwitterUsername] = useState('')
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
@@ -26,6 +28,8 @@ export default function EditProfilePage() {
           setUsername(data.username)
           setBio(data.bio ?? '')
           setAvatarUrl(data.avatar_url)
+          setInstagramUsername(data.instagram_username ?? '')
+          setTwitterUsername(data.twitter_username ?? '')
         }
       })
     })
@@ -62,6 +66,8 @@ export default function EditProfilePage() {
       username,
       bio: bio || null,
       avatar_url: newAvatarUrl,
+      instagram_username: instagramUsername.replace('@', '').trim() || null,
+      twitter_username: twitterUsername.replace('@', '').trim() || null,
     }).eq('id', userId)
 
     if (updateError) {
@@ -126,6 +132,46 @@ export default function EditProfilePage() {
           />
         </div>
 
+        <div className="space-y-4">
+          <p className="text-sm text-muted font-medium">SNSアカウント連携</p>
+
+          <div>
+            <label className="block text-sm text-muted mb-1.5 flex items-center gap-1.5">
+              <InstagramIcon />
+              Instagram
+            </label>
+            <div className="flex items-center bg-card border border-[#E8E0D8] rounded-lg overflow-hidden focus-within:border-accent transition-colors">
+              <span className="px-3 text-muted text-sm">@</span>
+              <input
+                type="text"
+                value={instagramUsername}
+                onChange={(e) => setInstagramUsername(e.target.value.replace('@', ''))}
+                placeholder="username"
+                maxLength={50}
+                className="flex-1 bg-transparent py-3 pr-4 text-primary focus:outline-none text-sm"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm text-muted mb-1.5 flex items-center gap-1.5">
+              <XIcon />
+              X (Twitter)
+            </label>
+            <div className="flex items-center bg-card border border-[#E8E0D8] rounded-lg overflow-hidden focus-within:border-accent transition-colors">
+              <span className="px-3 text-muted text-sm">@</span>
+              <input
+                type="text"
+                value={twitterUsername}
+                onChange={(e) => setTwitterUsername(e.target.value.replace('@', ''))}
+                placeholder="username"
+                maxLength={50}
+                className="flex-1 bg-transparent py-3 pr-4 text-primary focus:outline-none text-sm"
+              />
+            </div>
+          </div>
+        </div>
+
         {error && <p className="text-accent text-sm">{error}</p>}
 
         <button
@@ -137,5 +183,23 @@ export default function EditProfilePage() {
         </button>
       </form>
     </div>
+  )
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+    </svg>
+  )
+}
+
+function XIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
   )
 }

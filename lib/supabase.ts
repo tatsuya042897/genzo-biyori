@@ -7,6 +7,8 @@ export type Database = {
           username: string
           bio: string | null
           avatar_url: string | null
+          instagram_username: string | null
+          twitter_username: string | null
           created_at: string
         }
         Insert: {
@@ -14,12 +16,16 @@ export type Database = {
           username: string
           bio?: string | null
           avatar_url?: string | null
+          instagram_username?: string | null
+          twitter_username?: string | null
           created_at?: string
         }
         Update: {
           username?: string
           bio?: string | null
           avatar_url?: string | null
+          instagram_username?: string | null
+          twitter_username?: string | null
         }
         Relationships: []
       }

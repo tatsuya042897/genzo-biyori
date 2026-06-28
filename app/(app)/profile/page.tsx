@@ -5,6 +5,7 @@ import Link from 'next/link'
 import CalendarView from '@/components/profile/CalendarView'
 import ShareModal from '@/components/profile/ShareModal'
 import FollowingModal from '@/components/profile/FollowingModal'
+import SocialLinks from '@/components/profile/SocialLinks'
 
 export const dynamic = 'force-dynamic'
 
@@ -61,6 +62,10 @@ export default async function MyProfilePage() {
             {profile.bio && (
               <p className="text-sm text-muted leading-relaxed">{profile.bio}</p>
             )}
+            <SocialLinks
+              instagramUsername={profile.instagram_username ?? null}
+              twitterUsername={profile.twitter_username ?? null}
+            />
           </div>
         </div>
 
