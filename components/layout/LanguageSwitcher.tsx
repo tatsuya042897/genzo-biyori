@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
@@ -15,6 +16,19 @@ export default function LanguageSwitcher() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [pos, setPos] = useState({ top: 0, left: 0 })
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => { setMounted(true) }, [])
+
+  function handleOpen() {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect()
+      setPos({ top: rect.bottom + 8, left: rect.left })
+    }
+    setOpen(o => !o)
+  }
 
   async function handleSelect(code: string) {
     if (code === locale) { setOpen(false); return }
@@ -29,36 +43,41 @@ export default function LanguageSwitcher() {
     router.refresh()
   }
 
+  const dropdown = open ? (
+    <>
+      <div className="fixed inset-0 z-[190]" onClick={() => setOpen(false)} />
+      <div
+        className="fixed z-[200] bg-card border border-[#E8E0D8] rounded-xl shadow-lg overflow-hidden min-w-[110px]"
+        style={{ top: pos.top, left: pos.left }}
+      >
+        {LOCALES.map(l => (
+          <button
+            key={l.code}
+            onClick={() => handleSelect(l.code)}
+            className={`w-full px-4 py-3 text-sm text-left hover:bg-[#F0E9E2] transition-colors ${
+              l.code === locale ? 'text-accent font-medium' : 'text-primary'
+            }`}
+          >
+            {l.label}
+          </button>
+        ))}
+      </div>
+    </>
+  ) : null
+
   return (
-    <div className="relative">
+    <>
       <button
-        onClick={() => setOpen(o => !o)}
+        ref={buttonRef}
+        onClick={handleOpen}
         disabled={loading}
         className="flex items-center gap-1.5 text-sm text-muted hover:text-primary transition-colors disabled:opacity-50"
       >
         <GlobeIcon />
         <span>{LOCALES.find(l => l.code === locale)?.label}</span>
       </button>
-
-      {open && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-8 bg-card border border-[#E8E0D8] rounded-xl shadow-lg overflow-hidden z-50 min-w-[110px]">
-            {LOCALES.map(l => (
-              <button
-                key={l.code}
-                onClick={() => handleSelect(l.code)}
-                className={`w-full px-4 py-3 text-sm text-left hover:bg-[#F0E9E2] transition-colors ${
-                  l.code === locale ? 'text-accent font-medium' : 'text-primary'
-                }`}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
+      {mounted && createPortal(dropdown, document.body)}
+    </>
   )
 }
 
