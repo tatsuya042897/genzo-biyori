@@ -6,12 +6,13 @@ import FollowButton from '@/components/profile/FollowButton'
 import ShareModal from '@/components/profile/ShareModal'
 import SocialLinks from '@/components/profile/SocialLinks'
 import { getTranslations } from 'next-intl/server'
+import { getSession } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
 export default async function UserProfilePage({ params }: { params: { userId: string } }) {
-  const supabase = createClient()
-  const { data: { user: currentUser } } = await supabase.auth.getUser()
+  const [session, supabase] = [await getSession(), createClient()]
+  const currentUser = session?.user
 
   const [profileResult, postsResult, followCountResult, isFollowingResult, t] = await Promise.all([
     supabase.from('users').select('*').eq('id', params.userId).single(),

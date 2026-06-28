@@ -6,6 +6,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { ja, enUS, zhCN } from 'date-fns/locale'
 import { getTranslations, getLocale } from 'next-intl/server'
 import CommentSection from '@/components/post/CommentSection'
+import { getSession } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,8 +16,8 @@ type Comment = { id: string; content: string; created_at: string; users: UserPro
 const dateFnsLocales = { ja, en: enUS, zh: zhCN }
 
 export default async function PostDetailPage({ params }: { params: { postId: string } }) {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const [session, supabase] = [await getSession(), createClient()]
+  const user = session?.user
 
   const { data: post } = await supabase
     .from('posts')

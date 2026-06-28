@@ -1,12 +1,11 @@
-import { createClient } from '@/lib/supabase-server'
+import { getSession } from '@/lib/auth'
 import TimelineTabs from '@/components/timeline/TimelineTabs'
 
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 export default async function TimelinePage() {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const session = await getSession()
+  const user = session?.user
 
   return (
     <div className="max-w-lg mx-auto">

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { ja, enUS, zhCN } from 'date-fns/locale'
 import { getTranslations, getLocale } from 'next-intl/server'
+import { getSession } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,9 +22,10 @@ type Notification = {
 const dateFnsLocales = { ja, en: enUS, zh: zhCN }
 
 export default async function NotificationsPage() {
+  const session = await getSession()
+  if (!session) redirect('/auth/login')
+  const user = session.user
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login')
 
   const [{ data: raw }, t, locale] = await Promise.all([
     supabase

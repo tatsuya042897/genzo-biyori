@@ -8,13 +8,15 @@ import FollowingModal from '@/components/profile/FollowingModal'
 import SocialLinks from '@/components/profile/SocialLinks'
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 import { getTranslations } from 'next-intl/server'
+import { getSession } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
 export default async function MyProfilePage() {
+  const session = await getSession()
+  if (!session) redirect('/auth/login')
+  const user = session.user
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login')
 
   const [profileResult, postsResult, followCountResult] = await Promise.all([
     supabase.from('users').select('*').eq('id', user.id).single(),
