@@ -71,7 +71,7 @@ export default function EditProfilePage() {
     }).eq('id', userId)
 
     if (updateError) {
-      setError('保存に失敗しました')
+      setError('保存に失敗しました: ' + updateError.message)
       setLoading(false)
       return
     }
