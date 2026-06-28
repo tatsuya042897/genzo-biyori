@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { QRCodeSVG } from 'qrcode.react'
 
 type Props = {
@@ -12,33 +13,89 @@ export default function ShareModal({ userId, username }: Props) {
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const [profileUrl, setProfileUrl] = useState('')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     setProfileUrl(`${window.location.origin}/profile/${userId}`)
   }, [userId])
 
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(profileUrl)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
     } catch {
-      const input = document.createElement('input')
-      input.value = profileUrl
-      document.body.appendChild(input)
-      input.select()
+      const el = document.createElement('input')
+      el.value = profileUrl
+      document.body.appendChild(el)
+      el.select()
       document.execCommand('copy')
-      document.body.removeChild(input)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      document.body.removeChild(el)
     }
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2500)
   }
 
-  function handleNativeShare() {
-    if (navigator.share) {
-      navigator.share({ title: `${username} - 現像日和`, url: profileUrl })
-    }
-  }
+  const modal = open ? (
+    <div
+      className="fixed inset-0 z-[200] flex items-end justify-center bg-black/50"
+      style={{ backdropFilter: 'blur(2px)' }}
+      onClick={(e) => { if (e.target === e.currentTarget) setOpen(false) }}
+    >
+      <div className="w-full max-w-lg bg-[#F5EFE8] rounded-t-3xl shadow-2xl">
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 bg-[#D4C9BE] rounded-full" />
+        </div>
+
+        <div className="flex items-center justify-between px-6 py-4">
+          <h2 className="font-mincho text-base text-primary">プロフィールをシェア</h2>
+          <button
+            onClick={() => setOpen(false)}
+            className="text-muted hover:text-primary transition-colors p-1"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="flex flex-col items-center px-6 pb-10">
+          <div className="bg-white p-5 rounded-2xl shadow-sm mb-4">
+            {profileUrl && (
+              <QRCodeSVG
+                value={profileUrl}
+                size={200}
+                bgColor="#ffffff"
+                fgColor="#2C1810"
+                level="M"
+              />
+            )}
+          </div>
+
+          <p className="font-mincho text-primary text-base mb-6">@{username}</p>
+
+          <div className="w-full flex gap-2 mb-3">
+            <div className="flex-1 bg-white border border-[#E8E0D8] rounded-xl px-4 py-3 text-xs text-muted truncate flex items-center">
+              {profileUrl}
+            </div>
+            <button
+              onClick={handleCopy}
+              className={`flex-shrink-0 px-5 py-3 rounded-xl text-sm font-medium transition-all ${
+                copied
+                  ? 'bg-green-600 text-white'
+                  : 'bg-accent text-white hover:bg-[#C05530]'
+              }`}
+            >
+              {copied ? '✓ コピー済み' : 'コピー'}
+            </button>
+          </div>
+
+          <p className="text-xs text-[#B0A098] text-center">
+            QRコードを読み取るか、リンクをコピーして共有できます
+          </p>
+        </div>
+      </div>
+    </div>
+  ) : null
 
   return (
     <>
@@ -56,67 +113,7 @@ export default function ShareModal({ userId, username }: Props) {
         シェア
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm"
-          onClick={(e) => { if (e.target === e.currentTarget) setOpen(false) }}
-        >
-          <div className="w-full max-w-lg bg-card rounded-t-3xl px-6 pt-6 pb-10 shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-mincho text-base text-primary">プロフィールをシェア</h2>
-              <button onClick={() => setOpen(false)} className="text-muted hover:text-primary transition-colors p-1">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
-                </svg>
-              </button>
-            </div>
-
-            {/* QR Code */}
-            <div className="flex justify-center mb-6">
-              <div className="bg-white p-4 rounded-2xl shadow-sm">
-                {profileUrl && (
-                  <QRCodeSVG
-                    value={profileUrl}
-                    size={180}
-                    bgColor="#ffffff"
-                    fgColor="#2C1810"
-                    level="M"
-                  />
-                )}
-              </div>
-            </div>
-
-            <p className="text-center text-xs text-muted mb-6">@{username}</p>
-
-            {/* URL */}
-            <div className="flex gap-2 mb-4">
-              <div className="flex-1 bg-background border border-[#E8E0D8] rounded-lg px-3 py-2.5 text-xs text-muted truncate">
-                {profileUrl}
-              </div>
-              <button
-                onClick={handleCopy}
-                className={`flex-shrink-0 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  copied
-                    ? 'bg-green-600 text-white'
-                    : 'bg-accent text-white hover:bg-[#C05530]'
-                }`}
-              >
-                {copied ? 'コピー済み' : 'コピー'}
-              </button>
-            </div>
-
-            {/* Native share (mobile) */}
-            {typeof navigator !== 'undefined' && 'share' in navigator && (
-              <button
-                onClick={handleNativeShare}
-                className="w-full border border-[#E8E0D8] rounded-lg py-2.5 text-sm text-muted hover:text-primary hover:border-accent transition-colors"
-              >
-                その他のアプリでシェア
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+      {mounted && createPortal(modal, document.body)}
     </>
   )
 }

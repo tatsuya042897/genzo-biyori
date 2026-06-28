@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import CalendarView from '@/components/profile/CalendarView'
 import ShareModal from '@/components/profile/ShareModal'
+import FollowingModal from '@/components/profile/FollowingModal'
 
 export const dynamic = 'force-dynamic'
 
@@ -68,10 +69,7 @@ export default async function MyProfilePage() {
             <span className="font-playfair text-2xl text-primary">{posts.length}</span>
             <span className="text-xs text-muted ml-1.5">投稿</span>
           </div>
-          <div>
-            <span className="font-playfair text-2xl text-primary">{followingCount}</span>
-            <span className="text-xs text-muted ml-1.5">フォロー</span>
-          </div>
+          <FollowingModal userId={profile.id} count={followingCount} currentUserId={profile.id} />
         </div>
 
         <div className="mb-8">
