@@ -79,6 +79,52 @@ export type Database = {
         Update: Record<string, never>
         Relationships: []
       }
+      comments: {
+        Row: {
+          id: string
+          post_id: string
+          user_id: string
+          content: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          post_id: string
+          user_id: string
+          content: string
+          created_at?: string
+        }
+        Update: {
+          content?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          actor_id: string
+          type: string
+          post_id: string | null
+          comment_id: string | null
+          read: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          actor_id: string
+          type: string
+          post_id?: string | null
+          comment_id?: string | null
+          read?: boolean
+          created_at?: string
+        }
+        Update: {
+          read?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>

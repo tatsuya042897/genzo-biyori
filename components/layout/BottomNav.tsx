@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import NotificationBell from './NotificationBell'
 
 function HomeIcon({ active }: { active: boolean }) {
   return (
@@ -38,7 +39,7 @@ function UserIcon({ active }: { active: boolean }) {
   )
 }
 
-export default function BottomNav() {
+export default function BottomNav({ userId }: { userId: string }) {
   const pathname = usePathname()
 
   const isSearch = pathname === '/search'
@@ -63,6 +64,8 @@ export default function BottomNav() {
           <SearchIcon active={isSearch} />
           <span className="text-[10px]">検索</span>
         </Link>
+
+        <NotificationBell userId={userId} />
 
         <Link
           href="/profile"

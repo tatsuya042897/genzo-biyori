@@ -29,6 +29,13 @@ export default function FollowButton({ targetUserId, currentUserId, initialFollo
         following_id: targetUserId,
       })
       setFollowing(true)
+
+      // フォロー通知
+      await supabase.from('notifications').insert({
+        user_id: targetUserId,
+        actor_id: currentUserId,
+        type: 'follow',
+      })
     }
     setLoading(false)
   }

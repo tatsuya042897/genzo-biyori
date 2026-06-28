@@ -20,6 +20,7 @@ type Post = {
     avatar_url: string | null
   }
   reposted?: boolean
+  commentCount?: number
 }
 
 export default function PostCard({ post, currentUserId }: { post: Post; currentUserId: string }) {
@@ -37,6 +38,16 @@ export default function PostCard({ post, currentUserId }: { post: Post; currentU
     } else {
       await supabase.from('reposts').insert({ user_id: currentUserId, post_id: post.id })
       setReposted(true)
+
+      // リポスト通知（自分の投稿は除く）
+      if (currentUserId && currentUserId !== post.users.id) {
+        await supabase.from('notifications').insert({
+          user_id: post.users.id,
+          actor_id: currentUserId,
+          type: 'repost',
+          post_id: post.id,
+        })
+      }
     }
     setLoading(false)
   }
@@ -45,15 +56,17 @@ export default function PostCard({ post, currentUserId }: { post: Post; currentU
 
   return (
     <article className="bg-card mb-4 mx-4 rounded-2xl overflow-hidden shadow-sm">
-      <div className="relative aspect-square w-full">
-        <Image
-          src={post.image_url}
-          alt={`${post.users.username}の写真`}
-          fill
-          className="object-cover"
-          sizes="(max-width: 512px) 100vw, 512px"
-        />
-      </div>
+      <Link href={`/post/${post.id}`}>
+        <div className="relative aspect-square w-full">
+          <Image
+            src={post.image_url}
+            alt={`${post.users.username}の写真`}
+            fill
+            className="object-cover"
+            sizes="(max-width: 512px) 100vw, 512px"
+          />
+        </div>
+      </Link>
 
       <div className="px-4 py-3">
         <div className="flex items-center justify-between mb-3">
@@ -96,7 +109,13 @@ export default function PostCard({ post, currentUserId }: { post: Post; currentU
           </div>
         )}
 
-        <div className="flex justify-end">
+        <div className="flex items-center gap-4 justify-end">
+          <Link href={`/post/${post.id}`} className="flex items-center gap-1.5 text-muted hover:text-primary transition-colors">
+            <CommentIcon />
+            {post.commentCount != null && post.commentCount > 0 && (
+              <span className="text-xs">{post.commentCount}</span>
+            )}
+          </Link>
           <button
             onClick={handleRepost}
             disabled={loading}
@@ -108,6 +127,14 @@ export default function PostCard({ post, currentUserId }: { post: Post; currentU
         </div>
       </div>
     </article>
+  )
+}
+
+function CommentIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+    </svg>
   )
 }
 
