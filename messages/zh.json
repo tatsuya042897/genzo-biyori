@@ -1,0 +1,55 @@
+{
+  "nav": { "timeline": "时间线", "search": "搜索", "notifications": "通知", "profile": "个人资料" },
+  "timeline": {
+    "following_tab": "关注中", "everyone_tab": "所有胶片",
+    "empty_following": "关注用户暂无发帖。\n试着关注感兴趣的用户吧。",
+    "empty_all": "暂无帖子。\n分享你的第一张照片吧。"
+  },
+  "search": {
+    "title": "搜索", "tab_users": "用户", "tab_posts": "胶片·器材",
+    "placeholder_users": "按用户名搜索...", "placeholder_posts": "按胶片、相机、镜头搜索...",
+    "button": "搜索", "empty_users": "未找到用户", "empty_posts": "未找到帖子",
+    "hint_users": "输入用户名进行搜索", "hint_posts": "按胶片、相机或镜头搜索"
+  },
+  "profile": {
+    "title": "个人资料", "edit": "编辑", "share": "分享",
+    "posts": "帖子", "following": "关注", "calendar": "发帖日历", "no_posts": "暂无帖子"
+  },
+  "edit": {
+    "title": "编辑个人资料", "cancel": "取消", "username": "用户名",
+    "bio": "个人简介", "sns": "关联社交账号", "save": "保存", "saving": "保存中...",
+    "avatar_hint": "点击更改"
+  },
+  "notifications": {
+    "title": "通知", "empty": "暂无通知",
+    "follow": "关注了你", "comment": "评论了你的帖子", "repost": "转发了你的帖子"
+  },
+  "post": {
+    "title": "帖子", "new_title": "新建帖子", "cancel": "取消",
+    "film": "使用胶片", "camera": "使用相机", "lens": "使用镜头",
+    "submit": "立即发布", "submitting": "发布中...",
+    "select_photo": "选择照片", "tap_to_add": "点击添加", "no_image_error": "请选择照片",
+    "upload_error": "图片上传失败", "post_error": "发布失败",
+    "comments": "评论", "no_comments": "暂无评论",
+    "comment_placeholder": "添加评论...", "comment_submit": "发布", "comment_delete": "删除",
+    "film_label": "胶片", "camera_label": "相机", "lens_label": "镜头"
+  },
+  "auth": {
+    "tagline": "胶片摄影，记录此刻。",
+    "email": "邮箱", "password": "密码", "password_hint": "至少6个字符",
+    "login": "登录", "logging_in": "登录中...", "login_error": "邮箱或密码不正确",
+    "no_account": "没有账号？", "register_link": "注册",
+    "register_title": "注册账号", "profile_title": "设置个人资料",
+    "next": "下一步", "back": "← 返回", "submit": "注册", "submitting": "注册中...",
+    "have_account": "已有账号？", "login_link": "登录",
+    "username": "用户名", "bio": "个人简介", "avatar_label": "头像",
+    "password_min_error": "密码至少需要6个字符"
+  },
+  "follow": { "follow": "关注", "following": "已关注" },
+  "share": {
+    "title": "分享个人资料", "copy": "复制", "copied": "✓ 已复制",
+    "hint": "扫描二维码或复制链接进行分享"
+  },
+  "following_list": { "title": "关注中", "empty": "暂未关注任何用户" },
+  "language": { "label": "语言" }
+}

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import NotificationBell from './NotificationBell'
 
 function HomeIcon({ active }: { active: boolean }) {
@@ -41,6 +42,7 @@ function UserIcon({ active }: { active: boolean }) {
 
 export default function BottomNav({ userId }: { userId: string }) {
   const pathname = usePathname()
+  const t = useTranslations('nav')
 
   const isSearch = pathname === '/search'
   const isHome = pathname === '/timeline'
@@ -49,36 +51,24 @@ export default function BottomNav({ userId }: { userId: string }) {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-[#E8E0D8] z-50">
       <div className="max-w-lg mx-auto flex items-center justify-around h-16 px-2">
-        <Link
-          href="/timeline"
-          className={`flex flex-col items-center gap-0.5 transition-colors flex-1 ${isHome ? 'text-accent' : 'text-muted'}`}
-        >
+        <Link href="/timeline" className={`flex flex-col items-center gap-0.5 transition-colors flex-1 ${isHome ? 'text-accent' : 'text-muted'}`}>
           <HomeIcon active={isHome} />
-          <span className="text-[10px]">タイムライン</span>
+          <span className="text-[10px]">{t('timeline')}</span>
         </Link>
 
-        <Link
-          href="/search"
-          className={`flex flex-col items-center gap-0.5 transition-colors flex-1 ${isSearch ? 'text-accent' : 'text-muted'}`}
-        >
+        <Link href="/search" className={`flex flex-col items-center gap-0.5 transition-colors flex-1 ${isSearch ? 'text-accent' : 'text-muted'}`}>
           <SearchIcon active={isSearch} />
-          <span className="text-[10px]">検索</span>
+          <span className="text-[10px]">{t('search')}</span>
         </Link>
 
         <NotificationBell userId={userId} />
 
-        <Link
-          href="/profile"
-          className={`flex flex-col items-center gap-0.5 transition-colors flex-1 ${isProfile ? 'text-accent' : 'text-muted'}`}
-        >
+        <Link href="/profile" className={`flex flex-col items-center gap-0.5 transition-colors flex-1 ${isProfile ? 'text-accent' : 'text-muted'}`}>
           <UserIcon active={isProfile} />
-          <span className="text-[10px]">プロフィール</span>
+          <span className="text-[10px]">{t('profile')}</span>
         </Link>
 
-        <Link
-          href="/post/new"
-          className="flex items-center justify-center w-12 h-12 bg-accent rounded-full text-white shadow-md hover:bg-[#C05530] transition-colors flex-shrink-0"
-        >
+        <Link href="/post/new" className="flex items-center justify-center w-12 h-12 bg-accent rounded-full text-white shadow-md hover:bg-[#C05530] transition-colors flex-shrink-0">
           <PlusIcon />
         </Link>
       </div>

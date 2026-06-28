@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase-browser'
 
 export default function RegisterPage() {
@@ -17,6 +18,7 @@ export default function RegisterPage() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const t = useTranslations('auth')
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -28,11 +30,7 @@ export default function RegisterPage() {
   async function handleAccountStep(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
-
-    if (password.length < 6) {
-      setError('パスワードは6文字以上で入力してください')
-      return
-    }
+    if (password.length < 6) { setError(t('password_min_error')); return }
     setStep('profile')
   }
 
@@ -55,7 +53,6 @@ export default function RegisterPage() {
       return
     }
 
-    // セッションを明示的にセットしてRLSが通るようにする
     if (authData.session) {
       await supabase.auth.setSession({
         access_token: authData.session.access_token,
@@ -83,10 +80,7 @@ export default function RegisterPage() {
     }
 
     const { error: profileError } = await supabase.from('users').insert({
-      id: userId,
-      username,
-      bio: bio || null,
-      avatar_url: avatarUrl,
+      id: userId, username, bio: bio || null, avatar_url: avatarUrl,
     })
 
     if (profileError) {
@@ -105,44 +99,31 @@ export default function RegisterPage() {
         <div className="text-center mb-10">
           <h1 className="font-playfair text-4xl font-medium text-primary mb-2">現像日和</h1>
           <p className="text-muted text-sm tracking-wider">
-            {step === 'account' ? '新規アカウント登録' : 'プロフィール設定'}
+            {step === 'account' ? t('register_title') : t('profile_title')}
           </p>
         </div>
 
         {step === 'account' ? (
           <form onSubmit={handleAccountStep} className="space-y-5">
             <div>
-              <label className="block text-sm text-muted mb-1.5">メールアドレス</label>
+              <label className="block text-sm text-muted mb-1.5">{t('email')}</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
                 className="w-full bg-card border border-[#E8E0D8] rounded-lg px-4 py-3 text-primary focus:outline-none focus:border-accent transition-colors"
                 placeholder="film@example.com"
               />
             </div>
-
             <div>
-              <label className="block text-sm text-muted mb-1.5">パスワード</label>
+              <label className="block text-sm text-muted mb-1.5">{t('password')}</label>
               <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
+                type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6}
                 className="w-full bg-card border border-[#E8E0D8] rounded-lg px-4 py-3 text-primary focus:outline-none focus:border-accent transition-colors"
-                placeholder="6文字以上"
+                placeholder={t('password_hint')}
               />
             </div>
-
             {error && <p className="text-accent text-sm">{error}</p>}
-
-            <button
-              type="submit"
-              className="w-full bg-accent text-white rounded-lg py-3 font-medium hover:bg-[#C05530] transition-colors"
-            >
-              次へ
+            <button type="submit" className="w-full bg-accent text-white rounded-lg py-3 font-medium hover:bg-[#C05530] transition-colors">
+              {t('next')}
             </button>
           </form>
         ) : (
@@ -153,64 +134,48 @@ export default function RegisterPage() {
                   {avatarPreview ? (
                     <Image src={avatarPreview} alt="avatar" width={96} height={96} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-muted text-xs text-center leading-tight">プロフィール<br />写真</span>
+                    <span className="text-muted text-xs text-center leading-tight whitespace-pre-line">{t('avatar_label')}</span>
                   )}
                 </div>
                 <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
               </label>
             </div>
-
             <div>
-              <label className="block text-sm text-muted mb-1.5">ユーザー名 <span className="text-accent">*</span></label>
+              <label className="block text-sm text-muted mb-1.5">{t('username')} <span className="text-accent">*</span></label>
               <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                maxLength={30}
+                type="text" value={username} onChange={(e) => setUsername(e.target.value)} required maxLength={30}
                 className="w-full bg-card border border-[#E8E0D8] rounded-lg px-4 py-3 text-primary focus:outline-none focus:border-accent transition-colors"
                 placeholder="filmlover"
               />
             </div>
-
             <div>
-              <label className="block text-sm text-muted mb-1.5">自己紹介</label>
+              <label className="block text-sm text-muted mb-1.5">{t('bio')}</label>
               <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                maxLength={160}
-                rows={3}
+                value={bio} onChange={(e) => setBio(e.target.value)} maxLength={160} rows={3}
                 className="w-full bg-card border border-[#E8E0D8] rounded-lg px-4 py-3 text-primary focus:outline-none focus:border-accent transition-colors resize-none"
                 placeholder="フィルムカメラが好きです..."
               />
             </div>
-
             {error && <p className="text-accent text-sm">{error}</p>}
-
             <button
-              type="submit"
-              disabled={loading || !username}
+              type="submit" disabled={loading || !username}
               className="w-full bg-accent text-white rounded-lg py-3 font-medium hover:bg-[#C05530] transition-colors disabled:opacity-60"
             >
-              {loading ? '登録中...' : '登録する'}
+              {loading ? t('submitting') : t('submit')}
             </button>
-
             <button
-              type="button"
-              onClick={() => setStep('account')}
+              type="button" onClick={() => setStep('account')}
               className="w-full text-muted text-sm hover:text-primary transition-colors"
             >
-              ← 戻る
+              {t('back')}
             </button>
           </form>
         )}
 
         {step === 'account' && (
           <p className="text-center text-muted text-sm mt-8">
-            すでにアカウントをお持ちの方は{' '}
-            <Link href="/auth/login" className="text-accent hover:underline">
-              ログイン
-            </Link>
+            {t('have_account')}{' '}
+            <Link href="/auth/login" className="text-accent hover:underline">{t('login_link')}</Link>
           </p>
         )}
       </div>

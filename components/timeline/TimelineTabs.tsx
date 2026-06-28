@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase-browser'
 import PostCard from '@/components/post/PostCard'
 
@@ -27,6 +28,7 @@ export default function TimelineTabs({ currentUserId }: { currentUserId: string 
   const [allPosts, setAllPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [followingLoaded, setFollowingLoaded] = useState(false)
+  const t = useTranslations('timeline')
 
   const fetchRepostedIds = useCallback(async (supabase: ReturnType<typeof createClient>) => {
     if (!currentUserId) return new Set<string>()
@@ -42,7 +44,6 @@ export default function TimelineTabs({ currentUserId }: { currentUserId: string 
     }))
   }, [])
 
-  // 最初に「みんなのフィルム」を取得
   useEffect(() => {
     async function fetchAll() {
       setLoading(true)
@@ -61,7 +62,6 @@ export default function TimelineTabs({ currentUserId }: { currentUserId: string 
     fetchAll()
   }, [fetchRepostedIds, normalizePosts])
 
-  // 「フォロー中」タブを初めて開いたときに取得
   useEffect(() => {
     if (tab !== 'following' || followingLoaded) return
 
@@ -102,55 +102,39 @@ export default function TimelineTabs({ currentUserId }: { currentUserId: string 
   }, [tab, followingLoaded, currentUserId, fetchRepostedIds, normalizePosts])
 
   const posts = tab === 'following' ? followingPosts : allPosts
-  const showLoading = loading
 
   return (
     <>
-      {/* Tabs */}
       <div className="sticky top-[61px] bg-background/95 backdrop-blur-sm z-30 border-b border-[#E8E0D8]/60">
         <div className="max-w-lg mx-auto flex">
           <button
             onClick={() => setTab('following')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-              tab === 'following' ? 'text-primary' : 'text-muted'
-            }`}
+            className={`flex-1 py-3 text-sm font-medium transition-colors relative ${tab === 'following' ? 'text-primary' : 'text-muted'}`}
           >
-            フォロー中
-            {tab === 'following' && (
-              <span className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-accent rounded-full" />
-            )}
+            {t('following_tab')}
+            {tab === 'following' && <span className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-accent rounded-full" />}
           </button>
           <button
             onClick={() => setTab('all')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-              tab === 'all' ? 'text-primary' : 'text-muted'
-            }`}
+            className={`flex-1 py-3 text-sm font-medium transition-colors relative ${tab === 'all' ? 'text-primary' : 'text-muted'}`}
           >
-            みんなのフィルム
-            {tab === 'all' && (
-              <span className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-accent rounded-full" />
-            )}
+            {t('everyone_tab')}
+            {tab === 'all' && <span className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-accent rounded-full" />}
           </button>
         </div>
       </div>
 
       <main className="pt-4">
-        {showLoading ? (
+        {loading ? (
           <div className="flex justify-center py-24">
             <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
           </div>
         ) : posts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 px-8 text-center">
             <p className="font-playfair text-6xl text-[#E8E0D8] mb-6">✦</p>
-            {tab === 'following' ? (
-              <p className="text-muted text-sm leading-relaxed">
-                フォロー中のユーザーの投稿がありません。<br />気になるユーザーをフォローしてみましょう。
-              </p>
-            ) : (
-              <p className="text-muted text-sm leading-relaxed">
-                まだ投稿がありません。<br />最初の一枚を共有しましょう。
-              </p>
-            )}
+            <p className="text-muted text-sm leading-relaxed whitespace-pre-line">
+              {tab === 'following' ? t('empty_following') : t('empty_all')}
+            </p>
           </div>
         ) : (
           posts.map(post => (

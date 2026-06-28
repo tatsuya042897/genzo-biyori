@@ -1,0 +1,55 @@
+{
+  "nav": { "timeline": "タイムライン", "search": "検索", "notifications": "通知", "profile": "プロフィール" },
+  "timeline": {
+    "following_tab": "フォロー中", "everyone_tab": "みんなのフィルム",
+    "empty_following": "フォロー中のユーザーの投稿がありません。\n気になるユーザーをフォローしてみましょう。",
+    "empty_all": "まだ投稿がありません。\n最初の一枚を共有しましょう。"
+  },
+  "search": {
+    "title": "検索", "tab_users": "ユーザー", "tab_posts": "フィルム・機材",
+    "placeholder_users": "ユーザー名で検索...", "placeholder_posts": "フィルム名・カメラ・レンズで検索...",
+    "button": "検索", "empty_users": "ユーザーが見つかりませんでした", "empty_posts": "投稿が見つかりませんでした",
+    "hint_users": "ユーザー名を入力して検索", "hint_posts": "フィルム名・カメラ・レンズ名で検索"
+  },
+  "profile": {
+    "title": "プロフィール", "edit": "編集", "share": "シェア",
+    "posts": "投稿", "following": "フォロー", "calendar": "投稿カレンダー", "no_posts": "まだ投稿がありません"
+  },
+  "edit": {
+    "title": "プロフィール編集", "cancel": "キャンセル", "username": "ユーザー名",
+    "bio": "自己紹介", "sns": "SNSアカウント連携", "save": "保存する", "saving": "保存中...",
+    "avatar_hint": "タップして変更"
+  },
+  "notifications": {
+    "title": "通知", "empty": "まだ通知はありません",
+    "follow": "があなたをフォローしました", "comment": "がコメントしました", "repost": "がリポストしました"
+  },
+  "post": {
+    "title": "投稿", "new_title": "新規投稿", "cancel": "キャンセル",
+    "film": "使用フィルム", "camera": "使用カメラ", "lens": "使用レンズ",
+    "submit": "今すぐ投稿する", "submitting": "投稿中...",
+    "select_photo": "写真を選択", "tap_to_add": "タップして追加", "no_image_error": "写真を選択してください",
+    "upload_error": "画像のアップロードに失敗しました", "post_error": "投稿に失敗しました",
+    "comments": "コメント", "no_comments": "まだコメントがありません",
+    "comment_placeholder": "コメントを追加...", "comment_submit": "投稿", "comment_delete": "削除",
+    "film_label": "Film", "camera_label": "Camera", "lens_label": "Lens"
+  },
+  "auth": {
+    "tagline": "フィルム写真、今この瞬間を。",
+    "email": "メールアドレス", "password": "パスワード", "password_hint": "6文字以上",
+    "login": "ログイン", "logging_in": "ログイン中...", "login_error": "メールアドレスまたはパスワードが正しくありません",
+    "no_account": "アカウントをお持ちでない方は", "register_link": "新規登録",
+    "register_title": "新規アカウント登録", "profile_title": "プロフィール設定",
+    "next": "次へ", "back": "← 戻る", "submit": "登録する", "submitting": "登録中...",
+    "have_account": "すでにアカウントをお持ちの方は", "login_link": "ログイン",
+    "username": "ユーザー名", "bio": "自己紹介", "avatar_label": "プロフィール\n写真",
+    "password_min_error": "パスワードは6文字以上で入力してください"
+  },
+  "follow": { "follow": "フォローする", "following": "フォロー中" },
+  "share": {
+    "title": "プロフィールをシェア", "copy": "コピー", "copied": "✓ コピー済み",
+    "hint": "QRコードを読み取るか、リンクをコピーして共有できます"
+  },
+  "following_list": { "title": "フォロー中", "empty": "フォロー中のユーザーがいません" },
+  "language": { "label": "言語" }
+}

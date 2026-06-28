@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase-browser'
 
 export default function EditProfilePage() {
@@ -17,6 +18,7 @@ export default function EditProfilePage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
+  const t = useTranslations('edit')
 
   useEffect(() => {
     const supabase = createClient()
@@ -87,9 +89,9 @@ export default function EditProfilePage() {
       <header className="sticky top-0 bg-background/95 backdrop-blur-sm z-40 px-4 py-4 border-b border-[#E8E0D8]/60">
         <div className="flex items-center justify-between">
           <button onClick={() => router.back()} className="text-muted hover:text-primary transition-colors">
-            キャンセル
+            {t('cancel')}
           </button>
-          <h1 className="font-mincho text-lg">プロフィール編集</h1>
+          <h1 className="font-mincho text-lg">{t('title')}</h1>
           <div className="w-16" />
         </div>
       </header>
@@ -106,34 +108,29 @@ export default function EditProfilePage() {
             </div>
             <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
           </label>
-          <p className="text-xs text-muted mt-2">タップして変更</p>
+          <p className="text-xs text-muted mt-2">{t('avatar_hint')}</p>
         </div>
 
         <div>
-          <label className="block text-sm text-muted mb-1.5">ユーザー名</label>
+          <label className="block text-sm text-muted mb-1.5">{t('username')}</label>
           <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            maxLength={30}
+            type="text" value={username} onChange={(e) => setUsername(e.target.value)}
+            required maxLength={30}
             className="w-full bg-card border border-[#E8E0D8] rounded-lg px-4 py-3 text-primary focus:outline-none focus:border-accent transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-sm text-muted mb-1.5">自己紹介</label>
+          <label className="block text-sm text-muted mb-1.5">{t('bio')}</label>
           <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            maxLength={160}
-            rows={4}
+            value={bio} onChange={(e) => setBio(e.target.value)}
+            maxLength={160} rows={4}
             className="w-full bg-card border border-[#E8E0D8] rounded-lg px-4 py-3 text-primary focus:outline-none focus:border-accent transition-colors resize-none"
           />
         </div>
 
         <div className="space-y-4">
-          <p className="text-sm text-muted font-medium">SNSアカウント連携</p>
+          <p className="text-sm text-muted font-medium">{t('sns')}</p>
 
           <div>
             <label className="block text-sm text-muted mb-1.5 flex items-center gap-1.5">
@@ -143,11 +140,9 @@ export default function EditProfilePage() {
             <div className="flex items-center bg-card border border-[#E8E0D8] rounded-lg overflow-hidden focus-within:border-accent transition-colors">
               <span className="px-3 text-muted text-sm">@</span>
               <input
-                type="text"
-                value={instagramUsername}
+                type="text" value={instagramUsername}
                 onChange={(e) => setInstagramUsername(e.target.value.replace('@', ''))}
-                placeholder="username"
-                maxLength={50}
+                placeholder="username" maxLength={50}
                 className="flex-1 bg-transparent py-3 pr-4 text-primary focus:outline-none text-sm"
               />
             </div>
@@ -161,11 +156,9 @@ export default function EditProfilePage() {
             <div className="flex items-center bg-card border border-[#E8E0D8] rounded-lg overflow-hidden focus-within:border-accent transition-colors">
               <span className="px-3 text-muted text-sm">@</span>
               <input
-                type="text"
-                value={twitterUsername}
+                type="text" value={twitterUsername}
                 onChange={(e) => setTwitterUsername(e.target.value.replace('@', ''))}
-                placeholder="username"
-                maxLength={50}
+                placeholder="username" maxLength={50}
                 className="flex-1 bg-transparent py-3 pr-4 text-primary focus:outline-none text-sm"
               />
             </div>
@@ -175,11 +168,10 @@ export default function EditProfilePage() {
         {error && <p className="text-accent text-sm">{error}</p>}
 
         <button
-          type="submit"
-          disabled={loading || !username}
+          type="submit" disabled={loading || !username}
           className="w-full bg-accent text-white rounded-lg py-3 font-medium hover:bg-[#C05530] transition-colors disabled:opacity-60"
         >
-          {loading ? '保存中...' : '保存する'}
+          {loading ? t('saving') : t('save')}
         </button>
       </form>
     </div>

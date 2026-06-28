@@ -6,6 +6,8 @@ import CalendarView from '@/components/profile/CalendarView'
 import ShareModal from '@/components/profile/ShareModal'
 import FollowingModal from '@/components/profile/FollowingModal'
 import SocialLinks from '@/components/profile/SocialLinks'
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
+import { getTranslations } from 'next-intl/server'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,16 +29,18 @@ export default async function MyProfilePage() {
   if (!profile) redirect('/auth/login')
 
   const postedDates = posts.map((p) => p.created_at)
+  const t = await getTranslations('profile')
 
   return (
     <div className="max-w-lg mx-auto">
       <header className="sticky top-0 bg-background/95 backdrop-blur-sm z-40 px-4 py-4 border-b border-[#E8E0D8]/60">
         <div className="flex items-center justify-between">
-          <h1 className="font-mincho text-lg">プロフィール</h1>
+          <LanguageSwitcher />
+          <h1 className="font-mincho text-lg">{t('title')}</h1>
           <div className="flex items-center gap-4">
             <ShareModal userId={profile.id} username={profile.username} />
             <Link href="/profile/edit" className="text-sm text-muted hover:text-primary transition-colors">
-              編集
+              {t('edit')}
             </Link>
           </div>
         </div>
@@ -72,20 +76,20 @@ export default async function MyProfilePage() {
         <div className="flex gap-6 mb-8">
           <div>
             <span className="font-playfair text-2xl text-primary">{posts.length}</span>
-            <span className="text-xs text-muted ml-1.5">投稿</span>
+            <span className="text-xs text-muted ml-1.5">{t('posts')}</span>
           </div>
           <FollowingModal userId={profile.id} count={followingCount} currentUserId={profile.id} />
         </div>
 
         <div className="mb-8">
-          <h3 className="font-mincho text-sm text-muted mb-3">投稿カレンダー</h3>
+          <h3 className="font-mincho text-sm text-muted mb-3">{t('calendar')}</h3>
           <CalendarView postedDates={postedDates} />
         </div>
 
         <div>
-          <h3 className="font-mincho text-sm text-muted mb-3">投稿</h3>
+          <h3 className="font-mincho text-sm text-muted mb-3">{t('posts')}</h3>
           {posts.length === 0 ? (
-            <p className="text-center text-muted text-sm py-12">まだ投稿がありません</p>
+            <p className="text-center text-muted text-sm py-12">{t('no_posts')}</p>
           ) : (
             <div className="grid grid-cols-3 gap-0.5">
               {posts.map((post) => (

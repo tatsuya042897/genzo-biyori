@@ -1,0 +1,55 @@
+{
+  "nav": { "timeline": "Timeline", "search": "Search", "notifications": "Notifications", "profile": "Profile" },
+  "timeline": {
+    "following_tab": "Following", "everyone_tab": "Everyone's Film",
+    "empty_following": "No posts from users you follow.\nTry following users you're interested in.",
+    "empty_all": "No posts yet.\nShare your first photo."
+  },
+  "search": {
+    "title": "Search", "tab_users": "Users", "tab_posts": "Film & Gear",
+    "placeholder_users": "Search by username...", "placeholder_posts": "Search by film, camera, lens...",
+    "button": "Search", "empty_users": "No users found", "empty_posts": "No posts found",
+    "hint_users": "Enter a username to search", "hint_posts": "Search by film, camera, or lens"
+  },
+  "profile": {
+    "title": "Profile", "edit": "Edit", "share": "Share",
+    "posts": "Posts", "following": "Following", "calendar": "Post Calendar", "no_posts": "No posts yet"
+  },
+  "edit": {
+    "title": "Edit Profile", "cancel": "Cancel", "username": "Username",
+    "bio": "Bio", "sns": "Link SNS Accounts", "save": "Save", "saving": "Saving...",
+    "avatar_hint": "Tap to change"
+  },
+  "notifications": {
+    "title": "Notifications", "empty": "No notifications yet",
+    "follow": " started following you", "comment": " commented on your post", "repost": " reposted your post"
+  },
+  "post": {
+    "title": "Post", "new_title": "New Post", "cancel": "Cancel",
+    "film": "Film Used", "camera": "Camera Used", "lens": "Lens Used",
+    "submit": "Post Now", "submitting": "Posting...",
+    "select_photo": "Select Photo", "tap_to_add": "Tap to add", "no_image_error": "Please select a photo",
+    "upload_error": "Failed to upload image", "post_error": "Failed to post",
+    "comments": "Comments", "no_comments": "No comments yet",
+    "comment_placeholder": "Add a comment...", "comment_submit": "Post", "comment_delete": "Delete",
+    "film_label": "Film", "camera_label": "Camera", "lens_label": "Lens"
+  },
+  "auth": {
+    "tagline": "Film photography, this very moment.",
+    "email": "Email", "password": "Password", "password_hint": "At least 6 characters",
+    "login": "Login", "logging_in": "Logging in...", "login_error": "Invalid email or password",
+    "no_account": "Don't have an account?", "register_link": "Sign up",
+    "register_title": "Create Account", "profile_title": "Set Up Profile",
+    "next": "Next", "back": "← Back", "submit": "Register", "submitting": "Registering...",
+    "have_account": "Already have an account?", "login_link": "Login",
+    "username": "Username", "bio": "Bio", "avatar_label": "Profile\nPhoto",
+    "password_min_error": "Password must be at least 6 characters"
+  },
+  "follow": { "follow": "Follow", "following": "Following" },
+  "share": {
+    "title": "Share Profile", "copy": "Copy", "copied": "✓ Copied",
+    "hint": "Scan the QR code or copy the link to share"
+  },
+  "following_list": { "title": "Following", "empty": "Not following anyone yet" },
+  "language": { "label": "Language" }
+}

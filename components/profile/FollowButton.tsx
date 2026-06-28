@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase-browser'
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 export default function FollowButton({ targetUserId, currentUserId, initialFollowing }: Props) {
   const [following, setFollowing] = useState(initialFollowing)
   const [loading, setLoading] = useState(false)
+  const t = useTranslations('follow')
 
   async function handleToggle() {
     if (loading) return
@@ -24,13 +26,8 @@ export default function FollowButton({ targetUserId, currentUserId, initialFollo
         .eq('following_id', targetUserId)
       setFollowing(false)
     } else {
-      await supabase.from('follows').insert({
-        follower_id: currentUserId,
-        following_id: targetUserId,
-      })
+      await supabase.from('follows').insert({ follower_id: currentUserId, following_id: targetUserId })
       setFollowing(true)
-
-      // フォロー通知
       await supabase.from('notifications').insert({
         user_id: targetUserId,
         actor_id: currentUserId,
@@ -50,7 +47,7 @@ export default function FollowButton({ targetUserId, currentUserId, initialFollo
           : 'bg-accent text-white hover:bg-[#C05530]'
       }`}
     >
-      {following ? 'フォロー中' : 'フォローする'}
+      {following ? t('following') : t('follow')}
     </button>
   )
 }

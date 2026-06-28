@@ -3,13 +3,16 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
-import { ja } from 'date-fns/locale'
+import { ja, enUS, zhCN } from 'date-fns/locale'
+import { getTranslations, getLocale } from 'next-intl/server'
 import CommentSection from '@/components/post/CommentSection'
 
 export const dynamic = 'force-dynamic'
 
 type UserProfile = { id: string; username: string; avatar_url: string | null }
 type Comment = { id: string; content: string; created_at: string; users: UserProfile }
+
+const dateFnsLocales = { ja, en: enUS, zh: zhCN }
 
 export default async function PostDetailPage({ params }: { params: { postId: string } }) {
   const supabase = createClient()
@@ -23,16 +26,16 @@ export default async function PostDetailPage({ params }: { params: { postId: str
 
   if (!post) notFound()
 
-  // 投稿者・コメント・ログインユーザーを並列取得
-  const [postUserResult, commentsResult, currentProfileResult] = await Promise.all([
+  const [postUserResult, commentsResult, currentProfileResult, t, locale] = await Promise.all([
     supabase.from('users').select('id, username, avatar_url').eq('id', post.user_id).single(),
     supabase.from('comments').select('id, content, created_at, user_id').eq('post_id', post.id).order('created_at', { ascending: true }),
     user ? supabase.from('users').select('id, username, avatar_url').eq('id', user.id).single() : Promise.resolve({ data: null }),
+    getTranslations('post'),
+    getLocale(),
   ])
 
   const postUser: UserProfile = postUserResult.data ?? { id: post.user_id, username: '?', avatar_url: null }
 
-  // コメントのユーザー情報を一括取得
   const rawComments = commentsResult.data ?? []
   const commentUserIds = Array.from(new Set(rawComments.map(c => c.user_id)))
   const { data: commentUsersData } = commentUserIds.length > 0
@@ -50,7 +53,8 @@ export default async function PostDetailPage({ params }: { params: { postId: str
   }))
 
   const currentProfile = currentProfileResult.data ?? null
-  const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true, locale: ja })
+  const dateLocale = dateFnsLocales[locale as 'ja' | 'en' | 'zh'] ?? ja
+  const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true, locale: dateLocale })
 
   return (
     <div className="max-w-lg mx-auto">
@@ -61,7 +65,7 @@ export default async function PostDetailPage({ params }: { params: { postId: str
               <path d="M15 18l-6-6 6-6" />
             </svg>
           </Link>
-          <h1 className="font-mincho text-lg">投稿</h1>
+          <h1 className="font-mincho text-lg">{t('title')}</h1>
         </div>
       </header>
 
@@ -69,9 +73,8 @@ export default async function PostDetailPage({ params }: { params: { postId: str
         <div className="relative aspect-square w-full">
           <Image
             src={post.image_url}
-            alt={`${postUser.username}の写真`}
-            fill
-            className="object-cover"
+            alt={`${postUser.username}`}
+            fill className="object-cover"
             sizes="(max-width: 512px) 100vw, 512px"
             priority
           />
@@ -94,15 +97,9 @@ export default async function PostDetailPage({ params }: { params: { postId: str
 
           {(post.film_name || post.camera || post.lens) && (
             <div className="bg-[#F0E9E2] rounded-xl p-3 mb-6 space-y-1">
-              {post.film_name && (
-                <p className="text-xs text-muted"><span className="text-[#A89990] mr-2">Film</span>{post.film_name}</p>
-              )}
-              {post.camera && (
-                <p className="text-xs text-muted"><span className="text-[#A89990] mr-2">Camera</span>{post.camera}</p>
-              )}
-              {post.lens && (
-                <p className="text-xs text-muted"><span className="text-[#A89990] mr-2">Lens</span>{post.lens}</p>
-              )}
+              {post.film_name && <p className="text-xs text-muted"><span className="text-[#A89990] mr-2">Film</span>{post.film_name}</p>}
+              {post.camera && <p className="text-xs text-muted"><span className="text-[#A89990] mr-2">Camera</span>{post.camera}</p>}
+              {post.lens && <p className="text-xs text-muted"><span className="text-[#A89990] mr-2">Lens</span>{post.lens}</p>}
             </div>
           )}
 

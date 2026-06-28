@@ -4,21 +4,13 @@ import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase-browser'
 import FollowButton from './FollowButton'
 
-type FollowedUser = {
-  id: string
-  username: string
-  bio: string | null
-  avatar_url: string | null
-}
+type FollowedUser = { id: string; username: string; bio: string | null; avatar_url: string | null }
 
-type Props = {
-  userId: string
-  count: number
-  currentUserId: string
-}
+type Props = { userId: string; count: number; currentUserId: string }
 
 export default function FollowingModal({ userId, count, currentUserId }: Props) {
   const [open, setOpen] = useState(false)
@@ -26,6 +18,8 @@ export default function FollowingModal({ userId, count, currentUserId }: Props) 
   const [loading, setLoading] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const t = useTranslations('following_list')
+  const tp = useTranslations('profile')
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -33,23 +27,13 @@ export default function FollowingModal({ userId, count, currentUserId }: Props) 
     setOpen(true)
     if (loaded) return
     setLoading(true)
-
     const supabase = createClient()
-    const { data: followData } = await supabase
-      .from('follows')
-      .select('following_id')
-      .eq('follower_id', userId)
-
+    const { data: followData } = await supabase.from('follows').select('following_id').eq('follower_id', userId)
     const ids = (followData ?? []).map(f => f.following_id)
-
     if (ids.length > 0) {
-      const { data: usersData } = await supabase
-        .from('users')
-        .select('id, username, bio, avatar_url')
-        .in('id', ids)
-      setUsers(usersData ?? [])
+      const { data } = await supabase.from('users').select('id, username, bio, avatar_url').in('id', ids)
+      setUsers(data ?? [])
     }
-
     setLoading(false)
     setLoaded(true)
   }
@@ -64,43 +48,22 @@ export default function FollowingModal({ userId, count, currentUserId }: Props) 
         <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
           <div className="w-10 h-1 bg-[#D4C9BE] rounded-full" />
         </div>
-
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E0D8] flex-shrink-0">
-          <h2 className="font-mincho text-base text-primary">フォロー中 {count > 0 && `(${count})`}</h2>
-          <button
-            onClick={() => setOpen(false)}
-            className="text-muted hover:text-primary transition-colors p-1"
-          >
+          <h2 className="font-mincho text-base text-primary">{t('title')} {count > 0 && `(${count})`}</h2>
+          <button onClick={() => setOpen(false)} className="text-muted hover:text-primary transition-colors p-1">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
             </svg>
           </button>
         </div>
-
         <div className="overflow-y-auto flex-1 px-4 py-2">
-          {loading && (
-            <div className="flex justify-center py-10">
-              <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-            </div>
-          )}
-          {!loading && users.length === 0 && (
-            <p className="text-center text-muted text-sm py-10">フォロー中のユーザーがいません</p>
-          )}
+          {loading && <div className="flex justify-center py-10"><div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" /></div>}
+          {!loading && users.length === 0 && <p className="text-center text-muted text-sm py-10">{t('empty')}</p>}
           {users.map(u => (
             <div key={u.id} className="flex items-center gap-3 py-3 border-b border-[#E8E0D8]/50 last:border-0">
-              <Link
-                href={`/profile/${u.id}`}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 flex-1 min-w-0"
-              >
+              <Link href={`/profile/${u.id}`} onClick={() => setOpen(false)} className="flex items-center gap-3 flex-1 min-w-0">
                 {u.avatar_url ? (
-                  <Image
-                    src={u.avatar_url}
-                    alt={u.username}
-                    width={44}
-                    height={44}
-                    className="rounded-full w-11 h-11 object-cover flex-shrink-0"
-                  />
+                  <Image src={u.avatar_url} alt={u.username} width={44} height={44} className="rounded-full w-11 h-11 object-cover flex-shrink-0" />
                 ) : (
                   <div className="w-11 h-11 rounded-full bg-[#E8E0D8] flex items-center justify-center flex-shrink-0">
                     <span className="text-muted text-sm">{u.username[0]?.toUpperCase()}</span>
@@ -111,13 +74,7 @@ export default function FollowingModal({ userId, count, currentUserId }: Props) 
                   {u.bio && <p className="text-muted text-xs truncate mt-0.5">{u.bio}</p>}
                 </div>
               </Link>
-              {u.id !== currentUserId && (
-                <FollowButton
-                  targetUserId={u.id}
-                  currentUserId={currentUserId}
-                  initialFollowing={true}
-                />
-              )}
+              {u.id !== currentUserId && <FollowButton targetUserId={u.id} currentUserId={currentUserId} initialFollowing={true} />}
             </div>
           ))}
         </div>
@@ -127,14 +84,10 @@ export default function FollowingModal({ userId, count, currentUserId }: Props) 
 
   return (
     <>
-      <button
-        onClick={handleOpen}
-        className="text-left hover:opacity-70 transition-opacity"
-      >
+      <button onClick={handleOpen} className="text-left hover:opacity-70 transition-opacity">
         <span className="font-playfair text-2xl text-primary">{count}</span>
-        <span className="text-xs text-muted ml-1.5">フォロー</span>
+        <span className="text-xs text-muted ml-1.5">{tp('following')}</span>
       </button>
-
       {mounted && createPortal(modal, document.body)}
     </>
   )
