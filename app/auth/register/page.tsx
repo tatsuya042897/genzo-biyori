@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase-browser'
+import Logo from '@/components/layout/Logo'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -96,8 +97,8 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-10">
-          <h1 className="font-playfair text-4xl font-medium text-primary mb-2">現像日和</h1>
+        <div className="flex flex-col items-center mb-10">
+          <Logo size={96} className="rounded-2xl mb-4" />
           <p className="text-muted text-sm tracking-wider">
             {step === 'account' ? t('register_title') : t('profile_title')}
           </p>
